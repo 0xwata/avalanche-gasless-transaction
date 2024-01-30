@@ -1,0 +1,24 @@
+{
+    "name": "hardhat-project",
+    "scripts": {
+        "deploy": "hardhat run --network hackathon scripts/deploy-registry.ts",
+        "deploy:wavax": "hardhat run --network hackathon scripts/deploy-wavax.ts",
+        "register:gasless": "hardhat run --network hackathon scripts/register-gasless.ts"
+    },
+    "devDependencies": {
+        "@nomicfoundation/hardhat-toolbox": "^2.0.2",
+        "@uniswap/v3-periphery": "^1.4.3",
+        "axios": "^1.4.0",
+        "dotenv": "^16.4.1",
+        "hardhat": "^2.14.0",
+        "WETH10": "github:WETH10/WETH10"
+    },
+    "dependencies": {
+        "@metamask/eth-sig-util": "^5.0.2",
+        "@nomiclabs/hardhat-ethers": "^2.2.3",
+        "@opengsn/cli": "^3.0.0-beta.6",
+        "@opengsn/contracts": "^3.0.0-beta.6",
+        "@opengsn/provider": "^3.0.0-beta.6",
+        "@openzeppelin/contracts": "^4.8.3"
+    }
+}
