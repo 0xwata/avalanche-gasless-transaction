@@ -2,11 +2,11 @@ import * as ethSigUtil from "@metamask/eth-sig-util";
 import axios from "axios";
 import { ethers } from "hardhat";
 
-
+const CHAIN_ID=5039;
 const DOMAIN_NAME = process.env.DOMAIN_NAME;
 const DOMAIN_VERSION = process.env.DOMAIN_VERSION;
 const REQUEST_TYPE = process.env.REQUEST_TYPE || "";
-const REQUEST_TYPE_SUFFIX = process.env.REQUEST_TYPE_SUFFIX;
+const REQUEST_TYPE_SUFFIX = process.env.REQUEST_TYPE_SUFFIX || "";
 
 const types = {
   EIP712Domain: [
@@ -28,17 +28,12 @@ const types = {
 };
 
 async function main() {
-    const [account] = await ethers.getSigners();
-
-    // get network info from node
-    const network = await ethers.provider.getNetwork();
-    const hexChainId = ethers.utils.hexValue(network.chainId);
+    const signerAddress = process.env.PUBLIC_ADDRESS || "";
+    const account = await ethers.getSigner(signerAddress);
 
     // get forwarder contract
     const Forwarder = await ethers.getContractFactory("Forwarder");
     const forwarder = await Forwarder.attach(process.env.FORWARDER_ADDRESS || "");
-
-    console.log(`using chain id ${network.chainId}(${hexChainId})`);
 
     console.log(`using account ${await account.getAddress()}`);
 
@@ -63,7 +58,7 @@ async function main() {
     const domain = {
       name: DOMAIN_NAME,
       version: DOMAIN_VERSION,
-      chainId: network.chainId,
+      chainId: CHAIN_ID,
       verifyingContract: process.env.FORWARDER_ADDRESS,
     };
 
