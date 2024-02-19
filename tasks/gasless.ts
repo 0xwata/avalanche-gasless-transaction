@@ -6,7 +6,7 @@ import { ethers } from "hardhat";
 const DOMAIN_NAME = process.env.DOMAIN_NAME;
 const DOMAIN_VERSION = process.env.DOMAIN_VERSION;
 const REQUEST_TYPE = process.env.REQUEST_TYPE || "";
-const REQUEST_TYPE_SUFFIX = process.env.REQUEST_TYPE_SUFFIX;
+const REQUEST_TYPE_SUFFIX = process.env.REQUEST_TYPE_SUFFIX || "";
 
 const types = {
   EIP712Domain: [
