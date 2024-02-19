@@ -1,13 +1,12 @@
 import * as ethSigUtil from "@metamask/eth-sig-util";
 import axios from "axios";
-import { task } from "hardhat/config";
 import { ethers } from "hardhat";
 
 
-const DOMAIN_NAME = "onigiri";
-const DOMAIN_VERSION = "1";
-const REQUEST_TYPE = "Message";
-const REQUEST_TYPE_SUFFIX = "05aacfa016264de6fef24cade82d56bd3685be12e5650fa35851d899ffe000e6";
+const DOMAIN_NAME = process.env.DOMAIN_NAME;
+const DOMAIN_VERSION = process.env.DOMAIN_VERSION;
+const REQUEST_TYPE = process.env.REQUEST_TYPE || "";
+const REQUEST_TYPE_SUFFIX = process.env.REQUEST_TYPE_SUFFIX;
 
 const types = {
   EIP712Domain: [
@@ -24,18 +23,11 @@ const types = {
     { name: "nonce", type: "uint256" },
     { name: "data", type: "bytes" },
     { name: "validUntilTime", type: "uint256" },
-    { name: "ABCDEFGHIJKLMNOPQRSTGSN", type: "bytes32" },
+    { name: "typeSuffixData", type: "bytes32" },
   ],
 };
 
 async function main() {
-    // get signer by env
-    const address: string = process.env.PUBLIC_ADDRESS || '';
-
-    if (!address) {
-      throw new Error('PUBLIC_ADDRESS environment variable is not defined or empty');
-    }
-
     const [account] = await ethers.getSigners();
 
     // get network info from node
@@ -91,7 +83,7 @@ async function main() {
       primaryType: REQUEST_TYPE as any,
       message: {
         ...message,
-        ABCDEFGHIJKLMNOPQRSTGSN: Buffer.from(REQUEST_TYPE_SUFFIX, "utf8"),
+        typeSuffixData: Buffer.from(REQUEST_TYPE_SUFFIX, "utf8"),
       },
     };
 
@@ -111,7 +103,8 @@ async function main() {
     if (recovered.toLowerCase() !== (await account.getAddress()).toLowerCase()) {
       throw new Error("Invalid signature");
     } else {
-      console.log('valid signatured', recovered)
+      console.log('account:', await account.getAddress());
+      console.log('valid signature:', recovered)
     }
 
     const forwardRequest = {
@@ -162,7 +155,7 @@ async function main() {
 
       console.log(`tx mined : ${JSON.stringify(receipt, null, 2)}`);
     } catch (e: any) {
-      console.error(e.response.data);
+      console.error("you got error:", e.response.data);
     }
   }
 
